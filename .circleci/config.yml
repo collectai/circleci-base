@@ -4,7 +4,7 @@ jobs:
     working_directory: ~/build
     parallelism: 2
     docker:
-      - image: circleci/node:6.10
+      - image: circleci/golang:1.8
     steps:
       - checkout
       - setup_remote_docker
