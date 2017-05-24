@@ -14,7 +14,7 @@ jobs:
               IMAGE_NAME=circleci-nodejs6.10
               if [ "${CIRCLE_BRANCH}" == "master" ]; then 
                 echo ${CIRCLE_SHA1:0:7} > tag
-                docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS quay.io
+                docker login -u $DOCKER_USER -p $DOCKER_PASS quay.io
                 docker build --rm=false -t quay.io/collectai/${IMAGE_NAME}:${CIRCLE_SHA1:0:7} .
                 docker push quay.io/collectai/${IMAGE_NAME}:${CIRCLE_SHA1:0:7}
                 docker tag quay.io/collectai/${IMAGE_NAME}:${CIRCLE_SHA1:0:7} quay.io/collectai/${IMAGE_NAME}:latest
