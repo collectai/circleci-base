@@ -9,16 +9,16 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - build:
-        name: build & push docker image
-        command: |
-          APP=${CIRCLE_PROJECT_REPONAME}
-          TAG=${CIRCLE_SHA1:0:7}
-          HOST=559151583148.dkr.ecr.eu-central-1.amazonaws.com
-          $(aws ecr get-login --no-include-email --region eu-central-1)
-          docker build -t ${HOST}/${APP}:${TAG} .
-          docker push ${HOST}/${APP}:${TAG}
-          if [ "${CIRCLE_BRANCH}" == "master" ]; then
-            docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:latest
-            docker push ${HOST}/${APP}:latest
-          fi
+      - run:
+          name: build & push docker image
+          command: |
+            APP=${CIRCLE_PROJECT_REPONAME}
+            TAG=${CIRCLE_SHA1:0:7}
+            HOST=559151583148.dkr.ecr.eu-central-1.amazonaws.com
+            $(aws ecr get-login --no-include-email --region eu-central-1)
+            docker build -t ${HOST}/${APP}:${TAG} .
+            docker push ${HOST}/${APP}:${TAG}
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:latest
+              docker push ${HOST}/${APP}:latest
+            fi
