@@ -12,7 +12,8 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y \
     tar
 
 # awscli
-RUN pip3 install awscli --upgrade --user && export PATH=~/.local/bin:$PATH
+RUN pip3 install awscli --upgrade --user
+ENV PATH="~/.local/bin:${PATH}"
 
 # docker
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
