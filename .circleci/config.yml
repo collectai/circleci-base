@@ -10,15 +10,29 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: docker ecr login
+          command: $(aws ecr get-login --no-include-email --region eu-central-1)
+      - run:
           name: build & push docker image
           command: |
             APP=${CIRCLE_PROJECT_REPONAME}
             TAG=${CIRCLE_SHA1:0:7}
             HOST=559151583148.dkr.ecr.eu-central-1.amazonaws.com
-            $(aws ecr get-login --no-include-email --region eu-central-1)
             docker build -t ${HOST}/${APP}:${TAG} .
             docker push ${HOST}/${APP}:${TAG}
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:latest
+              docker push ${HOST}/${APP}:latest
+            fi
+      - run:
+          name: build & push alpine docker image
+          command: |
+            APP=${CIRCLE_PROJECT_REPONAME}
+            TAG=alpine-${CIRCLE_SHA1:0:7}
+            HOST=559151583148.dkr.ecr.eu-central-1.amazonaws.com
+            docker build -f alpine/Dockerfile -t ${HOST}/${APP}:${TAG} .
+            docker push ${HOST}/${APP}:${TAG}
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:alpine-latest
               docker push ${HOST}/${APP}:latest
             fi
