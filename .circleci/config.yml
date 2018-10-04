@@ -34,5 +34,5 @@ jobs:
             docker push ${HOST}/${APP}:${TAG}
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:alpine-latest
-              docker push ${HOST}/${APP}:latest
+              docker push ${HOST}/${APP}:alpine-latest
             fi
