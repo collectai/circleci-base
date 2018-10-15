@@ -11,6 +11,9 @@ RUN apk add --no-cache \
   git \
   tar
 
+# add collectai's request tool
+ADD request /usr/local/bin/
+
 WORKDIR /build
 
 CMD ["/bin/bash"]

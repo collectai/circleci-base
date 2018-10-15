@@ -44,6 +44,10 @@ RUN DOCKERIZE_URL="https://github.com/jwilder/dockerize/releases/download/v0.6.1
 # cleanup
 RUN rm -rf /var/lib/apt/lists/*
 
+
+# add collectai's request tool
+ADD request /usr/local/bin/
+
 # circleci user setup
 # TODO
 # RUN groupadd --gid 3434 circleci \

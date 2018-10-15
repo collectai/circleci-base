@@ -2,7 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: 559151583148.dkr.ecr.eu-central-1.amazonaws.com/circleci-base:latest
+      - image: $REGISTRY_URL/circleci-base:latest
         aws_auth:
           aws_access_key_id: $AWS_ACCESS_KEY_ID
           aws_secret_access_key: $AWS_SECRET_ACCESS_KEY
@@ -13,26 +13,32 @@ jobs:
           name: docker ecr login
           command: $(aws ecr get-login --no-include-email --region eu-central-1)
       - run:
+          name: get cai's request bin
+          command: |
+            docker create --name request_container ${REGISTRY_URL}/request
+            docker cp -a request_container:/request request
+            docker rm request_container
+      - run:
           name: build & push docker image
           command: |
             APP=${CIRCLE_PROJECT_REPONAME}
             TAG=${CIRCLE_SHA1:0:7}
-            HOST=559151583148.dkr.ecr.eu-central-1.amazonaws.com
-            docker build -t ${HOST}/${APP}:${TAG} .
-            docker push ${HOST}/${APP}:${TAG}
+
+            docker build -f ubuntu/Dockerfile -t ${REGISTRY_URL}/${APP}:${TAG} .
+            docker push ${REGISTRY_URL}/${APP}:${TAG}
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:latest
-              docker push ${HOST}/${APP}:latest
+              docker tag ${REGISTRY_URL}/${APP}:${TAG} ${REGISTRY_URL}/${APP}:latest
+              docker push ${REGISTRY_URL}/${APP}:latest
             fi
       - run:
           name: build & push alpine docker image
           command: |
             APP=${CIRCLE_PROJECT_REPONAME}
             TAG=alpine-${CIRCLE_SHA1:0:7}
-            HOST=559151583148.dkr.ecr.eu-central-1.amazonaws.com
-            docker build -f alpine/Dockerfile -t ${HOST}/${APP}:${TAG} .
-            docker push ${HOST}/${APP}:${TAG}
+
+            docker build -f alpine/Dockerfile -t ${REGISTRY_URL}/${APP}:${TAG} .
+            docker push ${REGISTRY_URL}/${APP}:${TAG}
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker tag ${HOST}/${APP}:${TAG} ${HOST}/${APP}:alpine-latest
-              docker push ${HOST}/${APP}:alpine-latest
+              docker tag ${REGISTRY_URL}/${APP}:${TAG} ${REGISTRY_URL}/${APP}:alpine-latest
+              docker push ${REGISTRY_URL}/${APP}:alpine-latest
             fi
