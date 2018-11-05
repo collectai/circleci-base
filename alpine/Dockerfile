@@ -9,6 +9,7 @@ RUN apk add --no-cache \
   dockerize \
   jq \
   git \
+  openssh \
   tar
 
 # add collectai's request tool
