@@ -10,7 +10,10 @@ RUN apk add --no-cache \
   jq \
   git \
   openssh \
-  tar
+  tar \
+  py-pip
+
+RUN pip install docker-compose
 
 # add collectai's request tool
 ADD request /usr/local/bin/
