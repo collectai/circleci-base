@@ -11,7 +11,8 @@ RUN apk add --no-cache \
   git \
   openssh \
   tar \
-  py-pip
+  py-pip \
+  make
 
 RUN pip install docker-compose
 
