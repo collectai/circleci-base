@@ -1,9 +1,10 @@
-FROM alpine:3.8
+FROM alpine:3
+
+ENV AWS_CLI_VERSION=1.17.0
 
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
 
 RUN apk add --no-cache \
-  aws-cli \
   curl \
   docker \
   dockerize \
@@ -11,11 +12,17 @@ RUN apk add --no-cache \
   git \
   openssh \
   tar \
+  python \
+  gcc musl-dev make python-dev libffi-dev openssl-dev \
   py-pip
 
-RUN pip install docker-compose
+RUN echo ${AWS_CLI_VERSION}
 
-# add collectai's request tool
+RUN pip install awscli==${AWS_CLI_VERSION} && aws --version
+
+RUN pip install docker-compose && docker-compose -version
+
+# Add collectai's request tool
 ADD request /usr/local/bin/
 
 WORKDIR /build
