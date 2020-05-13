@@ -1,6 +1,6 @@
 FROM alpine:3
 
-ENV AWS_CLI_VERSION=1.17.0
+ENV AWS_CLI_VERSION=1.18.43
 
 RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
 
